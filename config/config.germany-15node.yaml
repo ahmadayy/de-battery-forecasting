@@ -51,12 +51,39 @@ atlite:
   default_cutout: "europe-2023-sarah3-era5"
 
 # ---- Cost data vintage: 2025 (technology-data has no 2023 file) -------------
-# NOTE: these are *projected* 2025 techno-economic assumptions, including fuel
-# and CO2 prices, NOT 2023 actuals. Known, documented offset and a primary
-# candidate cause if model price LEVELS diverge from ENTSO-E 2023 — to be
-# diagnosed, not silently tuned.
+# Base techno-economic data is the technology-data v0.14.0 2025 vintage. Phase 1
+# validation vs ENTSO-E 2023 revealed two data issues, corrected below with
+# independently-sourced 2023 actuals (data corrections, NOT calibration-to-fit):
+#
+#  1) Zero carbon price: default emission_prices.enable=false + no CO2 cap left
+#     carbon free, so gas was excluded and the price level collapsed (model
+#     mean ~22 vs ENTSO-E ~95 EUR/MWh). Set the exogenous 2023 EUA price.
+#       co2 = 83.66 EUR/tCO2  — 2023 EU ETS annual average (ICE/EEX via Statista,
+#       https://www.statista.com/statistics/1465687/average-annual-eu-ets-allowance-prices/)
+#       Applied in prepare_network.py:348 add_emission_prices (co2_emissions/eff * price).
+#       NOTE: must be a float (83.66); a bare int is silently skipped (isinstance check).
+#
+#  2) Coal/lignite fuel near-equality: technology-data fuel for both came from
+#     the TYNDP 2024 pan-European scenario (coal 7.82, lignite 7.94 EUR/MWh_th),
+#     not German 2023 actuals — making coal cheaper than lignite (inverted vs
+#     reality). Override both with 2023 actuals:
+#       coal    = 14.62 EUR/MWh_th  — VDKi 2023 Grenzuebergangspreis Kraftwerkskohle
+#                 119 EUR/t SKE / 8.141 MWh_th per t SKE (7000 kcal/kg).
+#                 https://www.kohlenimporteure.de/files/user_upload/jahresberichte/Jahresbericht-2024.pdf
+#                 (BAFA Drittlandskohlepreis discontinued after 2018; VDKi is successor.)
+#       lignite = 1.5 EUR/MWh_th   — Oeko-Institut (Jan 2022) / BNetzA NEP variable
+#                 mining cost (fixed 4.7 excluded as non-dispatch-relevant).
+#     Applied in process_cost_data.py:181 marginal_cost = VOM + fuel/efficiency.
+# Gas fuel (42.9 EUR/MWh_th) left unchanged — already realistic for 2023 TTF.
 costs:
   year: 2025
+  emission_prices:
+    enable: true
+    co2: 83.66          # 2023 EU ETS annual average (float — see note above)
+  overwrites:
+    fuel:
+      coal: 14.62       # VDKi 2023: 119 EUR/t SKE / 8.141 MWh_th per t SKE
+      lignite: 1.5      # Oeko-Institut/BNetzA 2023 variable lignite mining cost
 
 electricity:
   # === DISPATCH-ONLY switch #1: nothing extendable ==========================

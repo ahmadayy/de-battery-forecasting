@@ -1,0 +1,90 @@
+# =============================================================================
+# Germany-only, 15-node, electricity-only, DISPATCH-ONLY override for PyPSA-Eur.
+#
+# Deep-merges over pypsa-eur/config/config.default.yaml (version v2026.02.0).
+# Used from inside the pypsa-eur/ clone via:
+#     snakemake ... --configfile ../config/config.germany-15node.yaml
+# Only changed keys are listed; everything else inherits the upstream default.
+#
+# Phase 1 decisions (traced against the installed rule code; see Phase 1 summary):
+#   * Weather + demand year:   2023 (prebuilt cutout; ENTSO-E covers it for validation)
+#   * Spatial scope:           Germany (DE) only
+#   * Clustering:              15 nodes
+#   * Mode:                    electricity-only (no sector coupling), overnight
+#   * DISPATCH-ONLY:           no generation / storage / transmission expansion
+#   * Fleet vintage:           2023 operational fleet (powerplants_filter)
+#   * Renewable capacities:    scaled to IRENA 2023 DE totals
+#                              (expected: PV 74.9, onshore ~61.3, offshore 8.5 GW)
+#   * Cost vintage:            2025 (nearest available; technology-data has no 2023 file)
+# =============================================================================
+
+run:
+  name: "germany-15node"
+
+# Single-horizon operational ("overnight") run, electricity only.
+foresight: overnight
+
+# ---- Geographic scope: Germany only ----------------------------------------
+countries:
+- DE
+
+# ---- Simulated period: full weather/demand year 2023 (hourly) --------------
+snapshots:
+  start: "2023-01-01"
+  end: "2024-01-01"
+  inclusive: left
+
+# ---- Resolution: 15 nodes. planning_horizons is INERT in the electricity-only
+#      path (the solved network base_s_15_elec_.nc has no planning_horizons
+#      wildcard; cost vintage is set by costs.year below). Kept aligned to 2025
+#      only to avoid confusion. ------------------------------------------------
+scenario:
+  clusters:
+  - 15
+  opts:
+  - ""
+  planning_horizons:
+  - 2025
+
+# ---- Weather data: prebuilt 2023 cutout (downloaded, not built; ~6.6 GB) ----
+atlite:
+  default_cutout: "europe-2023-sarah3-era5"
+
+# ---- Cost data vintage: 2025 (technology-data has no 2023 file) -------------
+# NOTE: these are *projected* 2025 techno-economic assumptions, including fuel
+# and CO2 prices, NOT 2023 actuals. Known, documented offset and a primary
+# candidate cause if model price LEVELS diverge from ENTSO-E 2023 — to be
+# diagnosed, not silently tuned.
+costs:
+  year: 2025
+
+electricity:
+  # === DISPATCH-ONLY switch #1: nothing extendable ==========================
+  # add_electricity.py:564 sets p_nom_extendable = (carrier in these lists).
+  # Empty lists => all generation/storage fixed at existing/estimated capacity.
+  extendable_carriers:
+    Generator: []
+    StorageUnit: []
+    Store: []
+    Link: []
+
+  # === DISPATCH-ONLY switch #2: fixed transmission ==========================
+  # prepare_network.py:178 `if factor == "opt" or float(factor) > 1.0:` makes
+  # lines/DC links extendable. Upstream default "vopt" would ENABLE expansion.
+  # "v1.0" (factor 1.0) keeps the grid fixed.
+  transmission_limit: v1.0
+
+  # === Fleet vintage: 2023 operational fleet ================================
+  # Keeps plants commissioned by 2023 and not retired before 2023 (incl. the
+  # ~4 GW nuclear that ran Jan-Apr 2023). Annual granularity means in-year
+  # retirements (nuclear) are modeled full-year — documented limitation.
+  powerplants_filter: "(DateOut >= 2023 or DateOut != DateOut) and (DateIn <= 2023 or DateIn != DateIn)"
+
+  # === Renewable capacities: scale to IRENA 2023 national totals ============
+  # powerplantmatching alone undercounts distributed PV (~38 vs ~75 GW).
+  # from_irenastat tops renewables UP to IRENA DE 2023 totals; it never trims
+  # (negative top-ups are zeroed), so the already-accurate wind is preserved:
+  #   solar 37.9 -> 74.9 GW (+37);  onshore stays ~61.3 GW;  offshore 8.5 GW.
+  estimate_renewable_capacities:
+    from_irenastat: true
+    year: 2023

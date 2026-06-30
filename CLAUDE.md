@@ -80,6 +80,12 @@ pixi install
 
 ## Current phase status
 
-- **Phase 0 — environment & toolchain setup (IN PROGRESS).** No modelling work
-  yet. Folder structure, git, gitignore, env specs, and tool verification.
-- Next: **Phase 1** — clone data and run a first 15-node dispatch solve.
+- **Phase 0 — environment & toolchain setup (COMPLETE).** Folder structure, git,
+  gitignore, env specs, tool verification.
+- **Phase 1 complete — dispatch model validated, known limitations documented.**
+  15-node Germany electricity-only dispatch for 2023, validated vs ENTSO-E:
+  price mean 81.9 vs 95.2 EUR/MWh (hourly corr ~0.75); lignite 76.8 vs 77.8 TWh.
+  Remaining gaps are structural and documented (gas underdispatch = no
+  reserve/CHP coupling; nuclear over = annual fleet granularity; wind/solar over
+  = Germany-only, no exports). Results in `results/germany-15node/validation/`.
+- Next: **Phase 2** — forecasting layer + battery arbitrage on this dispatch base.

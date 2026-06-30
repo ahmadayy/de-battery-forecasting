@@ -1,0 +1,72 @@
+# ---------------------------------------------------------------------------
+# Secrets / licenses — never track the Gurobi license anywhere
+# ---------------------------------------------------------------------------
+gurobi.lic
+**/gurobi.lic
+*.lic
+
+# ---------------------------------------------------------------------------
+# Project data & results (large / regenerable). Keep the folders via .gitkeep.
+# ---------------------------------------------------------------------------
+data/*
+!data/.gitkeep
+
+results/*
+!results/.gitkeep
+
+# ---------------------------------------------------------------------------
+# PyPSA-Eur is its own upstream git clone — not tracked by our repo.
+# Reproduce it via the pinned commit recorded in CLAUDE.md.
+# ---------------------------------------------------------------------------
+pypsa-eur/
+
+# ---------------------------------------------------------------------------
+# PyPSA-Eur generated artifacts (large, regenerable from the workflow).
+# (Kept for clarity even though pypsa-eur/ is fully ignored above.)
+# ---------------------------------------------------------------------------
+pypsa-eur/resources/
+pypsa-eur/results/
+pypsa-eur/cutouts/
+pypsa-eur/.snakemake/
+pypsa-eur/benchmarks/
+pypsa-eur/logs/
+pypsa-eur/data/
+# Network / data exchange artifacts (large NetCDF)
+*.nc
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# Conda / mamba / pixi environment artifacts (regenerable from spec files)
+#   - keep environment.yml and pixi.toml tracked; ignore the materialized envs
+#   - keep pixi.lock tracked (reproducibility); ignore the local .pixi cache
+# ---------------------------------------------------------------------------
+.pixi/
+envs/
+.conda/
+*.conda
+*.tar.bz2
+
+# ---------------------------------------------------------------------------
+# Editor / OS cruft
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,32 @@
+# Conda/mamba environment for the ml/ forecasting codebase.
+# This env is SEPARATE from PyPSA-Eur's pixi env — they never share a Python
+# interpreter; they exchange data via files (.nc, .csv, .parquet).
+#
+#   Create:   mamba env create -f ml/environment.yml
+#   Activate: mamba activate energy-ml
+name: energy-ml
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  # core scientific stack
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  # deep learning + gradient boosting
+  - pytorch        # CPU build from conda-forge (no CUDA assumed on WSL2)
+  - lightgbm
+  # plotting
+  - matplotlib
+  - seaborn
+  # notebooks / interactive
+  - jupyter
+  - jupyterlab
+  - ipykernel
+  # data exchange with PyPSA-Eur (NetCDF network files + parquet tables)
+  - xarray
+  - netcdf4
+  - pyarrow
+  # misc utilities
+  - tqdm

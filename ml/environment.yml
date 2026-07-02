@@ -28,5 +28,7 @@ dependencies:
   - xarray
   - netcdf4
   - pyarrow
+  # ENTSO-E Transparency data pull (Phase 2 forecasting pipeline)
+  - entsoe-py
   # misc utilities
   - tqdm

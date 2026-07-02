@@ -57,7 +57,7 @@ def load_ppl() -> pd.DataFrame:
     ppl = (
         ppl.powerplant.convert_country_to_alpha2()
         .query("Country == @COUNTRY")
-        .assign(Technology=lambda d: d.Technology)  # no gas remap needed for Fueltype totals
+        # no gas remap needed for Fueltype totals; only relabel biomass variants
         .replace({"Solid Biomass": "Bioenergy", "Biogas": "Bioenergy"})
     )
     if ppl.empty:

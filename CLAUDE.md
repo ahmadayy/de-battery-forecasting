@@ -33,6 +33,9 @@ importing each other.
 
 ```
 pypsa-eur/   cloned PyPSA-Eur repo (managed by pixi; generated dirs gitignored)
+config/      PyPSA-Eur config overrides (e.g. config.germany-15node.yaml)
+scripts/     runnable shell drivers (e.g. phase1_solve.sh — build & solve)
+analysis/    our inspection/validation scripts (run inside the pixi env)
 ml/          our DL/forecasting code (mamba env: energy-ml)
 data/        raw + processed data, large files (gitignored, kept via .gitkeep)
 notebooks/   analysis notebooks
@@ -57,8 +60,6 @@ docs/        write-ups
 - Show output after each major step; stop and surface the exact error on
   failure rather than guessing a fix.
 - Ask before installing significant new software or downloading large files.
-
-## Gurobi license
 
 ## PyPSA-Eur version pin
 

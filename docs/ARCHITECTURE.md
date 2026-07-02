@@ -1,4 +1,4 @@
-# CLAUDE.md — de-battery-forecasting
+# Architecture — de-battery-forecasting
 
 ## Project goal
 

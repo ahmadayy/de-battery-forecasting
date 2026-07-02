@@ -41,7 +41,7 @@ notebooks/  analysis notebooks
 docs/       write-ups
 ```
 
-See [`CLAUDE.md`](CLAUDE.md) for the full design decisions and rationale.
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design decisions and rationale.
 
 ---
 

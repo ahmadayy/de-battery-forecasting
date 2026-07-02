@@ -16,7 +16,7 @@ results/*
 
 # ---------------------------------------------------------------------------
 # PyPSA-Eur is its own upstream git clone — not tracked by our repo.
-# Reproduce it via the pinned commit recorded in CLAUDE.md.
+# Reproduce it via the pinned commit recorded in docs/ARCHITECTURE.md.
 # ---------------------------------------------------------------------------
 pypsa-eur/
 

@@ -2,7 +2,7 @@
 """
 Validate the solved 15-node Germany dispatch network against real ENTSO-E data.
 
-INTEGRITY CONTRACT (see project CLAUDE.md):
+INTEGRITY CONTRACT (see project docs/ARCHITECTURE.md):
   * Uses the REAL solved network and REAL ENTSO-E data only.
   * NEVER fabricates, mocks, or substitutes placeholder values.
   * Fails LOUDLY (non-zero exit) if either input is missing or malformed,

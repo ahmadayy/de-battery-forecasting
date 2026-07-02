@@ -30,5 +30,7 @@ dependencies:
   - pyarrow
   # ENTSO-E Transparency data pull (Phase 2 forecasting pipeline)
   - entsoe-py
+  # German public-holiday calendar features (Phase 2 feature engineering)
+  - holidays
   # misc utilities
   - tqdm

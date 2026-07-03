@@ -107,5 +107,15 @@ pixi install
   80% — a statistically significant drop, ~7-8 SE), and val->test error grew most
   for the LSTM, consistent with mild overfitting to the val-period regime.
   Results in `results/phase3/`.
-- Next: **battery arbitrage optimizer** fed by these forecasts, to quantify the
-  €/MW/yr value of forecast quality (the project's headline question).
+- **Phase 4 complete — battery arbitrage optimizer, headline question answered.**
+  Daily-rolling day-ahead arbitrage MILPs (gurobipy; 340 test-period delivery
+  days x 3 scenarios, all solved optimal) for a 1 MW / 2 MWh battery (RTE 85%
+  per NREL ATB 2024; 2h duration per German new-build trend,
+  Battery-Charts/RWTH). Realized revenue: perfect foresight 80,916 EUR/MW/yr;
+  LSTM q50 72,731 (89.9% of perfect); persistence 67,719 (83.7%). Value of
+  forecast quality (LSTM − naive) = **+5,012 EUR/MW/yr**; remaining gap to
+  perfect 8,185 EUR/MW/yr. Degradation, grid fees, and 15-min products
+  excluded (documented assumptions). Results in `results/phase4/`.
+- Next: possible extensions — risk-aware dispatch on the q10/q90 band
+  (deferred from Phase 4), nodal price/congestion forecasting on the 15-node
+  base, 15-min products, degradation-aware operation.

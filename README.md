@@ -12,9 +12,15 @@ storage arbitrage in the German electricity market. The approach:
 3. Feed those forecasts into a **battery storage trading/dispatch optimizer**
    and measure how forecast accuracy translates into arbitrage revenue.
 
-> **Status:** Phase 1 complete — the 15-node Germany dispatch model is built and
-> validated against ENTSO-E 2023 (numbers below). Phase 2 (forecasting +
-> battery arbitrage) is next.
+> **Status: Phases 1–4 complete — headline question answered.** The 15-node
+> dispatch model is validated against ENTSO-E 2023 (numbers below); a
+> leakage-safe forecasting dataset and models (quantile LSTM vs persistence /
+> LightGBM baselines, single held-out test evaluation) feed a battery
+> arbitrage optimizer. **Better forecasting (LSTM vs naive) is worth
+> +5,012 EUR/MW/yr** for a 1 MW / 2 MWh battery on German day-ahead prices —
+> capturing 89.9% of the 80,916 EUR/MW/yr perfect-foresight ceiling
+> (naive persistence: 83.7%). Details in `results/phase4/` and
+> `docs/ARCHITECTURE.md`.
 
 ---
 

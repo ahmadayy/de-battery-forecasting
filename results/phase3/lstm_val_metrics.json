@@ -1,0 +1,6 @@
+{
+  "eval_split": "val",
+  "model": "point_lstm_best",
+  "mae": 22.53189468383789,
+  "rmse": 31.38347625732422
+}

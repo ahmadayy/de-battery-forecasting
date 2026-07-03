@@ -1,0 +1,17 @@
+{
+  "eval_split": "val",
+  "model": "quantile_lstm",
+  "checkpoint_selection": "best val_pinball (early-stopping checkpoint), not final epoch",
+  "checkpoint_epoch": 4,
+  "best_val_pinball": 0.0710919636555268,
+  "epochs_run": 11,
+  "quantiles": [
+    0.1,
+    0.5,
+    0.9
+  ],
+  "median_mae": 21.59429931640625,
+  "median_rmse": 31.380512237548828,
+  "coverage_10_90_pct": 79.84943538268507,
+  "crossing_pct": 0.0
+}

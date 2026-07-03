@@ -89,4 +89,23 @@ pixi install
   Remaining gaps are structural and documented (gas underdispatch = no
   reserve/CHP coupling; nuclear over = annual fleet granularity; wind/solar over
   = Germany-only, no exports). Results in `results/germany-15node/validation/`.
-- Next: **Phase 2** — forecasting layer + battery arbitrage on this dispatch base.
+- **Phase 2 complete — leakage-safe forecasting dataset built.** Real ENTSO-E
+  DE-LU day-ahead price + load/wind/solar forecasts (2018-10..2026-06, gap-free
+  hourly) engineered into a feature set anchored on the 12:00 CET D-1 gate
+  (price lags/rolling, calendar, load forecast used directly as pre-gate,
+  wind/solar D-1 vintage, residual load). 773 rows with genuinely-missing
+  ENTSO-E values were dropped explicitly (manifest, no interpolation/fill).
+  Chronological train/val/test split with an 8-day embargo (>= the 191h max
+  feature lookback). Dataset in `data/processed/dataset.parquet`; per-feature
+  timing in `docs/phase2_leakage_audit.md`.
+- **Phase 3 complete — forecasting models trained, evaluated once on test.**
+  Baselines (persistence, LightGBM) plus a quantile LSTM (10/50/90, pinball
+  loss). Final one-time held-out test (n=8207): MAE persistence 27.33, LightGBM
+  24.17, quantile-LSTM median 24.02 EUR/MWh — the LSTM's edge over LightGBM is
+  small (0.61%, down from 4.16% on val) and it trails slightly on RMSE (37.07 vs
+  36.97). The 80% interval under-covers on test (76.5% vs 79.85% on val; target
+  80% — a statistically significant drop, ~7-8 SE), and val->test error grew most
+  for the LSTM, consistent with mild overfitting to the val-period regime.
+  Results in `results/phase3/`.
+- Next: **battery arbitrage optimizer** fed by these forecasts, to quantify the
+  €/MW/yr value of forecast quality (the project's headline question).
